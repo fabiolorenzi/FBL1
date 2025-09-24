@@ -1,0 +1,48 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Install dependencies",
+            "command": "cmake -S . -B build",
+            "group": "build",
+            "detail": "CMake install dependencies"
+        },
+        {
+            "type": "shell",
+            "label": "Build development",
+            "command": "cmake --build build --config Debug",
+            "group": "build",
+            "detail": "CMake compile development"
+        },
+        {
+            "type": "shell",
+            "label": "Build production",
+            "command": "cmake --build build --config Release", 
+            "group": "build",
+            "detail": "CMake compile production"
+        },
+        {
+            "type": "shell",
+            "label": "Run dev standalone",
+            "command": "./build/FBL1_artefacts/Debug/Standalone/FBL1.exe",
+            "group": "build",
+            "detail": "Run dev standalone"
+        },
+        {
+            "type": "shell",
+            "label": "Clean folders",
+            "command": "Remove-Item -Recurse -Force -Path build, libs",
+            "group": "build",
+            "detail": "Remove build and libs folder for a fresh restart",
+            "problemMatcher": []
+        },
+        {
+            "type": "shell",
+            "label": "Build & run",
+            "command": "cmake --build build --config Debug; ./build/FBL1_artefacts/Debug/Standalone/FBL1.exe",
+            "group": "build",
+            "detail": "Build and run dev standalone"
+        }
+    ]
+}
