@@ -27,4 +27,11 @@ class PluginProcessor : public juce::AudioProcessor {
 
         static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
         juce::AudioProcessorValueTreeState apvts;
+
+    private:
+        int leftChannel = 1;
+        int rightChannel = 1;
+
+        juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>> hpFilter[2];
+        juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>> lpFilter[2];
 };
