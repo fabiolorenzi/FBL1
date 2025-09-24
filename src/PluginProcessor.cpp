@@ -101,17 +101,25 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiB
 
     for (int channel = 0; channel < buffer.getNumChannels(); ++channel) {
         float* channelData = buffer.getWritePointer(channel);
-        
+
+        juce::dsp::AudioBlock<float> block(buffer);
+        auto singleChannelBlock = block.getSingleChannelBlock(channel);
+        juce::dsp::ProcessContextReplacing<float> context(singleChannelBlock);
+
         if (activated) {
-            *hpFilter[channel].state = *juce::dsp::IIR::Coefficients<float>::makeHighPass(getSampleRate(), hpFreq, std::sqrt(0.5f));
-            *lpFilter[channel].state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(getSampleRate(), lpFreq, std::sqrt(0.5f));
+            if (bandSelector == 0) {
+                *lpFilter[channel].state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(getSampleRate(), lpFreq, std::sqrt(0.5f));
+                lpFilter[channel].process(context);
+            } else if (bandSelector == 4) {
+                *hpFilter[channel].state = *juce::dsp::IIR::Coefficients<float>::makeHighPass(getSampleRate(), hpFreq, std::sqrt(0.5f));
+                hpFilter[channel].process(context);
+            } else {
+                *hpFilter[channel].state = *juce::dsp::IIR::Coefficients<float>::makeHighPass(getSampleRate(), hpFreq, std::sqrt(0.5f));
+                *lpFilter[channel].state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(getSampleRate(), lpFreq, std::sqrt(0.5f));
 
-            juce::dsp::AudioBlock<float> block(buffer);
-            auto singleChannelBlock = block.getSingleChannelBlock(channel);
-            juce::dsp::ProcessContextReplacing<float> context(singleChannelBlock);
-
-            hpFilter[channel].process(context);
-            lpFilter[channel].process(context);
+                hpFilter[channel].process(context);
+                lpFilter[channel].process(context);
+            }
         }
 
         for (int i = 0; i < buffer.getNumSamples(); ++i) {
