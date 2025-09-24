@@ -32,12 +32,6 @@ class PluginProcessor : public juce::AudioProcessor {
         int leftChannel = 1;
         int rightChannel = 1;
 
-        float crossL;
-        float crossML;
-        float crossM;
-        float crossMH;
-        int bandSelector;
-
         juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>> hpFilter[2];
         juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>> lpFilter[2];
 };

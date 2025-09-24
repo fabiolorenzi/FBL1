@@ -69,44 +69,47 @@ bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const {
 void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&) {
     auto* outputGainParam = apvts.getRawParameterValue("OUTPUT");
 
-    crossL = apvts.getRawParameterValue("CROSSL")->load();
-    crossML = apvts.getRawParameterValue("CROSSML")->load();
-    crossM = apvts.getRawParameterValue("CROSSM")->load();
-    crossMH = apvts.getRawParameterValue("CROSSMH")->load();
-    bandSelector = apvts.getRawParameterValue("BANDSELECTOR")->load();
+    float crossL = apvts.getRawParameterValue("CROSSL")->load();
+    float crossML = apvts.getRawParameterValue("CROSSML")->load();
+    float crossM = apvts.getRawParameterValue("CROSSM")->load();
+    float crossMH = apvts.getRawParameterValue("CROSSMH")->load();
+    int bandSelector = apvts.getRawParameterValue("BANDSELECTOR")->load();
+    bool activated = apvts.getRawParameterValue("ACTIVATE")->load();
 
     float outputGain = outputGainParam->load() <= -99.0f ? 0.0f : juce::Decibels::decibelsToGain(outputGainParam->load());
 
-    float hpFreq;
-    float lpFreq;
+    if (activated) {
+        float hpFreq;
+        float lpFreq;
 
-    if (bandSelector == 0) {
-        hpFreq = 0.0f;
-        lpFreq = crossL;
-    } else if (bandSelector == 1) {
-        hpFreq = crossL;
-        lpFreq = crossML;
-    } else if (bandSelector == 2) {
-        hpFreq = crossML;
-        lpFreq = crossM;
-    } else if (bandSelector == 3) {
-        hpFreq = crossM;
-        lpFreq = crossMH;
-    } else {
-        hpFreq = crossMH;
-        lpFreq = 22000.0f;
-    }
+        if (bandSelector == 0) {
+            hpFreq = 0.0f;
+            lpFreq = crossL;
+        } else if (bandSelector == 1) {
+            hpFreq = crossL;
+            lpFreq = crossML;
+        } else if (bandSelector == 2) {
+            hpFreq = crossML;
+            lpFreq = crossM;
+        } else if (bandSelector == 3) {
+            hpFreq = crossM;
+            lpFreq = crossMH;
+        } else {
+            hpFreq = crossMH;
+            lpFreq = 22000.0f;
+        }
 
-    for (int channel = 0; channel < buffer.getNumChannels(); ++channel) {
-        *hpFilter[channel].state = *juce::dsp::IIR::Coefficients<float>::makeHighPass(getSampleRate(), hpFreq, std::sqrt(0.5f));
-        *lpFilter[channel].state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(getSampleRate(), lpFreq, std::sqrt(0.5f));
+        for (int channel = 0; channel < buffer.getNumChannels(); ++channel) {
+            *hpFilter[channel].state = *juce::dsp::IIR::Coefficients<float>::makeHighPass(getSampleRate(), hpFreq, std::sqrt(0.5f));
+            *lpFilter[channel].state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(getSampleRate(), lpFreq, std::sqrt(0.5f));
 
-        juce::dsp::AudioBlock<float> block(buffer);
-        auto singleChannelBlock = block.getSingleChannelBlock(channel);
-        juce::dsp::ProcessContextReplacing<float> context(singleChannelBlock);
+            juce::dsp::AudioBlock<float> block(buffer);
+            auto singleChannelBlock = block.getSingleChannelBlock(channel);
+            juce::dsp::ProcessContextReplacing<float> context(singleChannelBlock);
 
-        hpFilter[channel].process(context);
-        lpFilter[channel].process(context);
+            hpFilter[channel].process(context);
+            lpFilter[channel].process(context);
+        }
     }
 }
 
@@ -143,6 +146,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout PluginProcessor::createParam
     layout.add(std::make_unique<juce::AudioParameterFloat>("CROSSM", "Cross M", juce::NormalisableRange<float>(150.0f, 8000.0f, 1.0f, 0.5f), 4000.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>("CROSSMH", "Cross MH", juce::NormalisableRange<float>(1000.0f, 16000.0f, 1.0f, 0.5f), 11000.0f));
     layout.add(std::make_unique<juce::AudioParameterInt>("BANDSELECTOR", "Band Selector", 0, 4, 0));
+    layout.add(std::make_unique<juce::AudioParameterBool>("ACTIVATE", "Activate", false));
     layout.add(std::make_unique<juce::AudioParameterFloat>("OUTPUT", "Output Gain", juce::NormalisableRange<float>(-100.0f, 6.0f, 0.1f, 3.0f), 0.0f));
 
     return layout;
