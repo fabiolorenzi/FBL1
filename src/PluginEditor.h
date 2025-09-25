@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "FlatButton.h"
 #include "FrequencyScreen.h"
 #include "Knob.h"
 #include "StepKnob.h"
@@ -26,6 +27,7 @@ class PluginEditor : public juce::AudioProcessorEditor {
         FrequencyScreen midScreen;
         FrequencyScreen midHighScreen;
         StepKnob bandSelectorKnob;
+        FlatButton activateButton;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor);
 };

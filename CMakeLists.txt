@@ -38,6 +38,7 @@ juce_generate_juce_header(${PROJECT_NAME})
 
 target_sources(${PROJECT_NAME}
     PRIVATE
+        src/FlatButton.cpp
         src/FrequencyScreen.cpp
         src/Knob.cpp
         src/PluginEditor.cpp
@@ -47,6 +48,7 @@ target_sources(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE
+        src/FlatButton.h
         src/FrequencyScreen.h
         src/Knob.h
         src/PluginEditor.h
