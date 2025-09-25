@@ -38,11 +38,17 @@ juce_generate_juce_header(${PROJECT_NAME})
 
 target_sources(${PROJECT_NAME}
     PRIVATE
+        src/FrequencyScreen.cpp
+        src/Knob.cpp
+        src/PluginEditor.cpp
         src/PluginProcessor.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE
+        src/FrequencyScreen.h
+        src/Knob.h
+        src/PluginEditor.h
         src/PluginProcessor.h
 )
 
