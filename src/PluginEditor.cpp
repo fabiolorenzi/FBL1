@@ -12,9 +12,10 @@ PluginEditor::PluginEditor(PluginProcessor& pluginProcessor)
       midLowScreen("", pluginProcessor.apvts, "CROSSML"),
       midScreen("", pluginProcessor.apvts, "CROSSM"),
       midHighScreen("", pluginProcessor.apvts, "CROSSMH"),
+      bandSelectorKnob("Band Selector", pluginProcessor.apvts, "BANDSELECTOR", this),
       outputKnob("Output", pluginProcessor.apvts, "OUTPUT", -100.0f, 6.0f, "dB", juce::Colours::grey, true, this)
 {
-    setSize(500, 500);
+    setSize(500, 430);
 
     addAndMakeVisible(crossLKnob);
     addAndMakeVisible(crossMLKnob);
@@ -24,8 +25,8 @@ PluginEditor::PluginEditor(PluginProcessor& pluginProcessor)
     addAndMakeVisible(midLowScreen);
     addAndMakeVisible(midScreen);
     addAndMakeVisible(midHighScreen);
-
-    // addAndMakeVisible(outputKnob);
+    addAndMakeVisible(bandSelectorKnob);
+    addAndMakeVisible(outputKnob);
 }
 
 PluginEditor::~PluginEditor() = default;
@@ -65,4 +66,6 @@ void PluginEditor::resized() {
     midLowScreen.setBounds(195, 125, 60, 35);
     midScreen.setBounds(305, 125, 60, 35);
     midHighScreen.setBounds(415, 125, 60, 35);
+    bandSelectorKnob.setBounds(150, 220, 200, 220);
+    outputKnob.setBounds(360, 245, 100, 160);
 }

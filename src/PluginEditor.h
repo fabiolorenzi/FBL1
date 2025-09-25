@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include "FrequencyScreen.h"
 #include "Knob.h"
+#include "StepKnob.h"
 
 class PluginProcessor;
 
@@ -24,6 +25,7 @@ class PluginEditor : public juce::AudioProcessorEditor {
         FrequencyScreen midLowScreen;
         FrequencyScreen midScreen;
         FrequencyScreen midHighScreen;
+        StepKnob bandSelectorKnob;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor);
 };

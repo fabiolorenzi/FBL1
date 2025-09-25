@@ -42,6 +42,7 @@ target_sources(${PROJECT_NAME}
         src/Knob.cpp
         src/PluginEditor.cpp
         src/PluginProcessor.cpp
+        src/StepKnob.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -50,6 +51,7 @@ target_include_directories(${PROJECT_NAME}
         src/Knob.h
         src/PluginEditor.h
         src/PluginProcessor.h
+        src/StepKnob.h
 )
 
 target_link_libraries(${PROJECT_NAME}
